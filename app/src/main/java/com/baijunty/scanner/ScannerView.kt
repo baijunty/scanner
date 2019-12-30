@@ -64,7 +64,7 @@ class ScannerView : FrameLayout{
         lifecycle.addObserver(manager)
         manager.addObserve(Observer{
             if (resultFoundListener?.onFounded(it)==true){
-                manager.handler?.sendEmptyMessageDelayed(R.id.restart_preview, 2000)
+                restartPreview()
             }
         })
         postInvalidateDelayed(200)
@@ -79,6 +79,10 @@ class ScannerView : FrameLayout{
                 a.recycle()
             }
         }
+    }
+
+    fun restartPreview(){
+        manager.handler?.sendEmptyMessageDelayed(R.id.restart_preview, 2000)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
