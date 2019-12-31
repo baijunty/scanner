@@ -51,7 +51,7 @@ public class ScannerManager implements LifecycleObserver, SurfaceHolder.Callback
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
-    void onPause(){
+    public void onPause(){
         ambientLightManager.stop();
         beepManager.close();
         if (handler!=null){
@@ -67,7 +67,7 @@ public class ScannerManager implements LifecycleObserver, SurfaceHolder.Callback
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
-    void onResume(){
+    public void onResume(){
         beepManager.updatePrefs();
         ambientLightManager.start(getCameraManager());
         SurfaceView surfaceView = scannerView.findViewById(R.id.preview_view);

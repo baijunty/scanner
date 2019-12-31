@@ -63,7 +63,7 @@ public class ScannerView extends FrameLayout {
         layoutScannerView(attrs);
     }
 
-    void bindLifecycle(Lifecycle lifecycle){
+    public void bindLifecycle(Lifecycle lifecycle){
         PreferenceManager.setDefaultValues(getContext(), R.xml.preferences, false);
         ViewfinderView viewfinderView=findViewById(R.id.viewfinder_view);
         viewfinderView.setCameraManager(getCameraManager());
@@ -88,7 +88,7 @@ public class ScannerView extends FrameLayout {
         }
     }
 
-    void restartPreview(){
+    public void restartPreview(){
         CaptureActivityHandler handler=getManager().getHandler();
         if (handler!=null){
             handler.sendEmptyMessageDelayed(R.id.restart_preview, 2000);
