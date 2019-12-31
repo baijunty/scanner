@@ -26,6 +26,10 @@ public class ScannerView extends FrameLayout {
     private float aspect=1.0f;
     private ScannerManager manager;
 
+    public void setResultFoundListener(OnScanResultFound resultFoundListener) {
+        this.resultFoundListener = resultFoundListener;
+    }
+
     public ScannerManager getManager(){
         if (manager==null){
             manager= new ScannerManager(this);
@@ -40,6 +44,10 @@ public class ScannerView extends FrameLayout {
             cameraManager=new CameraManager(getContext().getApplicationContext());
         }
         return cameraManager;
+    }
+
+    public void setAspect(float aspect) {
+        this.aspect = aspect;
     }
 
     public ScannerView(@NonNull Context context) {
