@@ -280,7 +280,7 @@ public final class CameraManager {
                 }
             }
             data=ver_data;
-            rect=new Rect(height-rect.bottom,rect.left,height-rect.top,rect.right);
+//            rect=new Rect(height-rect.bottom,rect.left,height-rect.top,rect.right);
             int temp=width;
             width=height;
             height=temp;
