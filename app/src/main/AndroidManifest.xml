@@ -15,4 +15,5 @@
             android:name="android.hardware.camera.flash"
             android:required="false" />
     <uses-feature android:name="android.hardware.screen.landscape" />
+
 </manifest>

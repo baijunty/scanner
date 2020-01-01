@@ -26,7 +26,7 @@
     <string name="preferences_decode_1D_product_title">1D Product</string>
     <string name="preferences_decode_Aztec_title">Aztec</string>
     <string name="preferences_decode_Data_Matrix_title">Data Matrix</string>
-    <string name="preferences_decode_PDF417_title">PDF417 (β)</string>
+    <string name="preferences_decode_PDF417_title">PDF417</string>
     <string name="preferences_decode_QR_title">QR Codes</string>
     <string name="preferences_device_bug_workarounds_title">Device Bug Workarounds</string>
     <string name="preferences_disable_barcode_scene_mode_title">No barcode scene mode</string>

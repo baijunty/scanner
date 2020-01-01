@@ -33,7 +33,7 @@ import java.util.Collection;
  *
  * @see PreferencesFragment
  */
-public final class PreferencesFragment
+public class PreferencesFragment
         extends PreferenceFragmentCompat
         implements SharedPreferences.OnSharedPreferenceChangeListener {
 

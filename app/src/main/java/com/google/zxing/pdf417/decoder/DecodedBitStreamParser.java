@@ -24,10 +24,7 @@ import com.google.zxing.pdf417.PDF417ResultMetadata;
 import java.io.ByteArrayOutputStream;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-
-import kotlin.text.Charsets;
 
 /**
  * <p>This class contains the methods for decoding the PDF417 codewords.</p>
@@ -104,7 +101,7 @@ final class DecodedBitStreamParser {
 
   static DecoderResult decode(int[] codewords, String ecLevel) throws FormatException {
     StringBuilder result = new StringBuilder(codewords.length * 2);
-    Charset encoding = Charsets.ISO_8859_1;
+    Charset encoding =Charset.forName("ISO_8859_1");
     // Get compaction mode
     int codeIndex = 1;
     int code = codewords[codeIndex++];

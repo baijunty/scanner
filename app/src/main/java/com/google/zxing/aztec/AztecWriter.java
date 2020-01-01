@@ -24,10 +24,7 @@ import com.google.zxing.aztec.encoder.Encoder;
 import com.google.zxing.common.BitMatrix;
 
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
-
-import kotlin.text.Charsets;
 
 /**
  * Renders an Aztec code as a {@link BitMatrix}.
@@ -41,7 +38,7 @@ public final class AztecWriter implements Writer {
 
   @Override
   public BitMatrix encode(String contents, BarcodeFormat format, int width, int height, Map<EncodeHintType,?> hints) {
-    Charset charset = Charsets.ISO_8859_1;
+    Charset charset = Charset.forName("ISO_8859_1");
     int eccPercent = Encoder.DEFAULT_EC_PERCENT;
     int layers = Encoder.DEFAULT_AZTEC_LAYERS;
     if (hints != null) {

@@ -26,10 +26,7 @@ import com.google.zxing.common.CharacterSetECI;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-
-import kotlin.text.Charsets;
 
 /**
  * PDF417 high-level encoder following the algorithm described in ISO/IEC 15438:2001(E) in
@@ -129,7 +126,7 @@ final class PDF417HighLevelEncoder {
   private static final byte[] MIXED = new byte[128];
   private static final byte[] PUNCTUATION = new byte[128];
 
-  private static final Charset DEFAULT_ENCODING = Charsets.ISO_8859_1;
+  private static final Charset DEFAULT_ENCODING = Charset.forName("ISO_8859_1");
 
   private PDF417HighLevelEncoder() {
   }
