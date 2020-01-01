@@ -106,8 +106,6 @@ public class ScannerView extends FrameLayout {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        int w=getMeasuredWidth();
-        int h=getMeasuredHeight();
         for (int i = 0; i < getChildCount(); i++) {
             View v=getChildAt(i);
             if (v.getId()==R.id.preview_view){
@@ -119,7 +117,6 @@ public class ScannerView extends FrameLayout {
                 break;
             }
         }
-        setMeasuredDimension(w,h);
     }
 
     public void displayError(String msg) {
