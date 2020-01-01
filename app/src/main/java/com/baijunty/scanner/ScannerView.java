@@ -23,7 +23,6 @@ import com.google.zxing.client.android.camera.CameraManager;
 
 public class ScannerView extends FrameLayout {
     OnScanResultFound resultFoundListener=null;
-    private float aspect=1.0f;
     private ScannerManager manager;
 
     public void setResultFoundListener(OnScanResultFound resultFoundListener) {
@@ -47,7 +46,8 @@ public class ScannerView extends FrameLayout {
     }
 
     public void setAspect(float aspect) {
-        this.aspect = aspect;
+        ViewfinderView viewfinderView=findViewById(R.id.viewfinder_view);
+        viewfinderView.setAspect(aspect);
     }
 
     public ScannerView(@NonNull Context context) {
@@ -75,7 +75,6 @@ public class ScannerView extends FrameLayout {
         PreferenceManager.setDefaultValues(getContext(), R.xml.preferences, false);
         ViewfinderView viewfinderView=findViewById(R.id.viewfinder_view);
         viewfinderView.setCameraManager(getCameraManager());
-        viewfinderView.setAspect(aspect);
         lifecycle.addObserver(getManager());
         getManager().addObserve(result -> {
             if (resultFoundListener!=null&&resultFoundListener.onFounded(result)){
@@ -90,7 +89,8 @@ public class ScannerView extends FrameLayout {
             View.inflate(getContext(), R.layout.capture, this);
             if (attrs!=null){
                 TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.ScannerView);
-                aspect=a.getFloat(R.styleable.ScannerView_aspect,1.0f);
+                float aspect=a.getFloat(R.styleable.ScannerView_aspect,1.0f);
+                setAspect(aspect);
                 a.recycle();
             }
         }

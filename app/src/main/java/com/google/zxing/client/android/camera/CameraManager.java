@@ -67,8 +67,9 @@ public final class CameraManager {
         previewCallback = new PreviewCallback(configManager);
     }
 
-    public void setViewfinderView(ViewfinderView viewfinderView) {
+    public synchronized void setViewfinderView(ViewfinderView viewfinderView) {
         this.viewfinderView = viewfinderView;
+        framingRectInPreview=null;
         getFramingRectInPreview();
     }
 
