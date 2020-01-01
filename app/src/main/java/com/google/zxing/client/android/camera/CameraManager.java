@@ -221,15 +221,11 @@ public final class CameraManager {
             }
             double scaleW=(double) framingRect.width()/(double)screenResolution.x;
             double scaleH=(double) framingRect.height()/(double)screenResolution.y;
-//            boolean landscape=(screenResolution.x>screenResolution.y);
-//            int width = (int)(cameraResolution.x*(landscape?scaleW:scaleH));
-//            int height = (int)(cameraResolution.y*(landscape?scaleH:scaleW));
-            int width = (int)(cameraResolution.x*scaleW);
-            int height = (int)(cameraResolution.y*scaleH);
-//            int leftOffset =(int)((framingRect.left/(double)screenResolution.x)*(landscape?cameraResolution.x:cameraResolution.y));
-//            int topOffset = (int)((framingRect.top/(double)screenResolution.y)*(landscape?cameraResolution.y:cameraResolution.x));
-            int leftOffset =(int)((framingRect.left/(double)screenResolution.x)*(cameraResolution.x));
-            int topOffset = (int)((framingRect.top/(double)screenResolution.y)*(cameraResolution.y));
+            boolean landscape=!(cameraResolution.x>cameraResolution.y)^(screenResolution.x>screenResolution.y);
+            int width = (int)((landscape?cameraResolution.x:cameraResolution.y)*scaleW);
+            int height = (int)((landscape?cameraResolution.y:cameraResolution.x)*scaleH);
+            int leftOffset =(int)((framingRect.left/(double)screenResolution.x)*(landscape?cameraResolution.x:cameraResolution.y));
+            int topOffset = (int)((framingRect.top/(double)screenResolution.y)*(landscape?cameraResolution.y:cameraResolution.x));
             framingRectInPreview = new Rect(leftOffset, topOffset, leftOffset + width, topOffset +height);
             Log.d("frame rect info",String.format("screen %s preview frame %s",framingRect.toString(),framingRectInPreview.toString()));
         }
@@ -285,9 +281,9 @@ public final class CameraManager {
             }
             data=ver_data;
 //            rect=new Rect(height-rect.bottom,rect.left,height-rect.top,rect.right);
-//            int temp=width;
-//            width=height;
-//            height=temp;
+            int temp=width;
+            width=height;
+            height=temp;
         }
         // Go ahead and assume it's YUV rather than die.
         return new PlanarYUVLuminanceSource(data, width, height, rect.left, rect.top,

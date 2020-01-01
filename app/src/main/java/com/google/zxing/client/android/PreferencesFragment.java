@@ -74,8 +74,6 @@ public class PreferencesFragment
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        addPreferencesFromResource(R.xml.preferences);
-
         PreferenceScreen preferences = getPreferenceScreen();
         preferences.getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
         checkBoxPrefs = findDecodePrefs(preferences,
