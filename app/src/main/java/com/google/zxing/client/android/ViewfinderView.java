@@ -40,10 +40,10 @@ import java.util.List;
  *
  * @author dswitkin@google.com (Daniel Switkin)
  */
-public final class ViewfinderView extends View {
+public class ViewfinderView extends View {
 
     private static final int[] SCANNER_ALPHA = {0, 64, 128, 192, 255, 192, 128, 64};
-    private static final long ANIMATION_DELAY = 80L;
+    private static final long ANIMATION_DELAY = 100L;
     private static final int CURRENT_POINT_OPACITY = 0xA0;
     private static final int MAX_RESULT_POINTS = 20;
     private static final int POINT_SIZE = 6;
@@ -51,13 +51,13 @@ public final class ViewfinderView extends View {
     private final int maskColor;
     private final int laserColor;
     private final int resultPointColor;
-    private int middle;
-    private CameraManager cameraManager;
-    private int scannerAlpha;
-    private float aspect = 1.0f;
-    private List<ResultPoint> possibleResultPoints;
-    private List<ResultPoint> lastPossibleResultPoints;
-    private Rect scanBoxRect;
+    protected int middle;
+    protected CameraManager cameraManager;
+    protected int scannerAlpha;
+    protected float aspect = 1.0f;
+    protected List<ResultPoint> possibleResultPoints;
+    protected List<ResultPoint> lastPossibleResultPoints;
+    protected Rect scanBoxRect;
 
     // This constructor is used when the class is built from an XML resource.
     public ViewfinderView(Context context, AttributeSet attrs) {
@@ -84,7 +84,7 @@ public final class ViewfinderView extends View {
         int w = getMeasuredWidth() * 4 / 5;
         int h = getMeasuredHeight() * 4 / 5;
         if (w > 0 && h > 0 && cameraManager != null) {
-            int height = Math.min((int) (w * aspect), getMeasuredHeight());
+            int height = Math.min((int) (w * aspect), h);
             int leftOffset = (getMeasuredWidth() - w) / 2;
             int topOffset = (getMeasuredHeight() - height) / 2;
             scanBoxRect = new Rect(leftOffset, topOffset, leftOffset + w, topOffset + height);
@@ -113,9 +113,20 @@ public final class ViewfinderView extends View {
         if (frame == null || previewFrame == null) {
             return;
         }
+        drawRect(canvas,frame);
+        drawPoint(canvas,frame,previewFrame);
+        // Request another update at the animation interval, but only repaint the laser line,
+        // not the entire viewfinder mask.
+        postInvalidateDelayed(ANIMATION_DELAY,
+                frame.left - POINT_SIZE,
+                frame.top - POINT_SIZE,
+                frame.right + POINT_SIZE,
+                frame.bottom + POINT_SIZE);
+    }
+
+    protected void drawRect(Canvas canvas, Rect frame){
         int width = getWidth();
         int height = getHeight();
-
         // Draw the exterior (i.e. outside the framing rect) darkened
         paint.setColor(maskColor);
         canvas.drawRect(0, 0, width, frame.top, paint);
@@ -139,12 +150,14 @@ public final class ViewfinderView extends View {
         if (middle < frame.top || middle > frame.bottom) {
             middle = frame.top;
         }
+        paint.setAlpha(255);
         canvas.drawOval(new RectF(frame.left + 2, middle - 2, frame.right - 1, middle + 3), paint);
         middle += height / 30;
+    }
 
+    protected void drawPoint(Canvas canvas,Rect frame,Rect previewFrame){
         float scaleX = frame.width() / (float) previewFrame.width();
         float scaleY = frame.height() / (float) previewFrame.height();
-
         List<ResultPoint> currentPossible = possibleResultPoints;
         List<ResultPoint> currentLast = lastPossibleResultPoints;
         int frameLeft = frame.left;
@@ -176,14 +189,6 @@ public final class ViewfinderView extends View {
                 }
             }
         }
-
-        // Request another update at the animation interval, but only repaint the laser line,
-        // not the entire viewfinder mask.
-        postInvalidateDelayed(ANIMATION_DELAY,
-                frame.left - POINT_SIZE,
-                frame.top - POINT_SIZE,
-                frame.right + POINT_SIZE,
-                frame.bottom + POINT_SIZE);
     }
 
     public void addPossibleResultPoint(ResultPoint point) {
