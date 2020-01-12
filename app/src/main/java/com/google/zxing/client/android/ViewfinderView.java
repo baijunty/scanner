@@ -25,7 +25,10 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.baijunty.scanner.R;
 import com.google.zxing.ResultPoint;
@@ -91,6 +94,20 @@ public class ViewfinderView extends View {
             Log.d("set frame rect", scanBoxRect.toString());
             cameraManager.setViewfinderView(this);
         }
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+        @SuppressLint("DrawAllocation")
+        int[] screen=new int[2];
+        getLocationOnScreen(screen);
+        int topOffset =Math.max(scanBoxRect.top-screen[1],0)/2;
+        scanBoxRect.top=scanBoxRect.top-topOffset;
+        scanBoxRect.bottom=scanBoxRect.bottom-topOffset;
+        TextView t=((View)getParent()).findViewById(R.id.status_view);
+        FrameLayout.LayoutParams lp=(FrameLayout.LayoutParams)t.getLayoutParams();
+        lp.topMargin=scanBoxRect.bottom+ (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,  8, getContext().getResources().getDisplayMetrics());
     }
 
     public void setAspect(float aspect) {

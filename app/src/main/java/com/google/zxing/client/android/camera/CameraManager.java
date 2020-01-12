@@ -23,6 +23,7 @@ import android.hardware.Camera;
 import android.os.Handler;
 import android.util.Log;
 import android.view.SurfaceHolder;
+
 import com.google.zxing.PlanarYUVLuminanceSource;
 import com.google.zxing.client.android.ViewfinderView;
 import com.google.zxing.client.android.camera.open.OpenCamera;
@@ -75,6 +76,10 @@ public final class CameraManager {
     public synchronized void refreshPreview(){
         framingRectInPreview=null;
         getFramingRectInPreview();
+    }
+
+    public CameraConfigurationManager getConfigManager() {
+        return configManager;
     }
 
     public OpenCamera getCamera() {

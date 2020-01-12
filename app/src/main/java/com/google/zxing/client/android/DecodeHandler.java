@@ -17,6 +17,12 @@
 package com.google.zxing.client.android;
 
 import android.graphics.Bitmap;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.util.Log;
+
 import com.baijunty.scanner.R;
 import com.baijunty.scanner.ScannerManager;
 import com.google.zxing.BinaryBitmap;
@@ -27,14 +33,7 @@ import com.google.zxing.ReaderException;
 import com.google.zxing.Result;
 import com.google.zxing.common.HybridBinarizer;
 
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.util.Log;
-
 import java.io.ByteArrayOutputStream;
-import java.nio.ByteBuffer;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -78,7 +77,7 @@ final class DecodeHandler extends Handler {
         Result rawResult = null;
         PlanarYUVLuminanceSource source = manager.getCameraManager().buildLuminanceSource(data, width, height);
         if (source != null) {
-            BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
+            BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(manager.getCameraManager().getConfigManager().isSoftColorInvert()?source.invert():source));
             try {
                 rawResult = multiFormatReader.decodeWithState(bitmap);
             } catch (ReaderException re) {

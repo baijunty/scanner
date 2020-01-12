@@ -257,10 +257,10 @@ public final class CameraConfigurationUtils {
     return closestIndex;
   }
 
-  public static void setInvertColor(Camera.Parameters parameters) {
+  public static boolean setInvertColor(Camera.Parameters parameters) {
     if (Camera.Parameters.EFFECT_NEGATIVE.equals(parameters.getColorEffect())) {
       Log.i(TAG, "Negative effect already set");
-      return;
+      return false;
     }
     String colorMode = findSettableValue("color effect",
                                          parameters.getSupportedColorEffects(),
@@ -268,6 +268,7 @@ public final class CameraConfigurationUtils {
     if (colorMode != null) {
       parameters.setColorEffect(colorMode);
     }
+    return colorMode==null;
   }
 
   public static Point findBestPreviewSizeValue(Camera.Parameters parameters, Point screenResolution) {

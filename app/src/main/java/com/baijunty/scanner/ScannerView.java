@@ -24,7 +24,7 @@ import com.google.zxing.client.android.camera.CameraManager;
 public class ScannerView extends FrameLayout {
     OnScanResultFound resultFoundListener=null;
     private ScannerManager manager;
-
+    private Point theScreenResolution =new Point();
     public void setResultFoundListener(OnScanResultFound resultFoundListener) {
         this.resultFoundListener = resultFoundListener;
     }
@@ -106,12 +106,11 @@ public class ScannerView extends FrameLayout {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        WindowManager manager = (WindowManager)getContext().getSystemService(Context.WINDOW_SERVICE);
         for (int i = 0; i < getChildCount(); i++) {
             View v=getChildAt(i);
-            if (v.getId()==R.id.preview_view){
-                WindowManager manager = (WindowManager)getContext().getSystemService(Context.WINDOW_SERVICE);
+            if (v.getId()==R.id.preview_view&&manager!=null){
                 Display display = manager.getDefaultDisplay();
-                Point theScreenResolution =new Point();
                 display.getSize(theScreenResolution);
                 v.measure(theScreenResolution.x |  (2 << 30), theScreenResolution.y |  (2 << 30));
                 break;

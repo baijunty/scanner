@@ -21,7 +21,6 @@
     <string name="preferences_bulk_mode_summary">Scan and save many barcodes continuously</string>
     <string name="preferences_bulk_mode_title">Bulk scan mode</string>
     <string name="preferences_copy_to_clipboard_title">Copy to clipboard</string>
-    <string name="preferences_custom_product_search_title">Custom search URL</string>
     <string name="preferences_decode_1D_industrial_title">1D Industrial</string>
     <string name="preferences_decode_1D_product_title">1D Product</string>
     <string name="preferences_decode_Aztec_title">Aztec</string>
