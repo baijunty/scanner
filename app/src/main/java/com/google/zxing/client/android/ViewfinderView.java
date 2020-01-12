@@ -21,14 +21,18 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Display;
 import android.view.View;
-import android.widget.FrameLayout;
+import android.view.WindowManager;
 import android.widget.TextView;
+
+import androidx.annotation.FloatRange;
 
 import com.baijunty.scanner.R;
 import com.google.zxing.ResultPoint;
@@ -61,7 +65,7 @@ public class ViewfinderView extends View {
     protected List<ResultPoint> possibleResultPoints;
     protected List<ResultPoint> lastPossibleResultPoints;
     protected Rect scanBoxRect;
-
+    private int[] screen=new int[2];
     // This constructor is used when the class is built from an XML resource.
     public ViewfinderView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -87,36 +91,46 @@ public class ViewfinderView extends View {
         int w = getMeasuredWidth() * 4 / 5;
         int h = getMeasuredHeight() * 4 / 5;
         if (w > 0 && h > 0 && cameraManager != null) {
-            int height = Math.min((int) (w * aspect), h);
-            int leftOffset = (getMeasuredWidth() - w) / 2;
-            int topOffset = (getMeasuredHeight() - height) / 2;
-            scanBoxRect = new Rect(leftOffset, topOffset, leftOffset + w, topOffset + height);
-            Log.d("set frame rect", scanBoxRect.toString());
+            adjustOffset();
             cameraManager.setViewfinderView(this);
         }
     }
 
-    @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
-        @SuppressLint("DrawAllocation")
-        int[] screen=new int[2];
-        getLocationOnScreen(screen);
-        int topOffset =Math.max(scanBoxRect.top-screen[1],0)/2;
-        scanBoxRect.top=scanBoxRect.top-topOffset;
-        scanBoxRect.bottom=scanBoxRect.bottom-topOffset;
-        TextView t=((View)getParent()).findViewById(R.id.status_view);
-        FrameLayout.LayoutParams lp=(FrameLayout.LayoutParams)t.getLayoutParams();
-        lp.topMargin=scanBoxRect.bottom+ (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,  8, getContext().getResources().getDisplayMetrics());
-    }
-
-    public void setAspect(float aspect) {
+    public void setAspect(@FloatRange(from = 0.1,to = 1.0)  float aspect) {
+        if (aspect<0.1){
+            aspect=0.1f;
+        } else if (aspect>1.0){
+            aspect=1.0f;
+        }
         this.aspect = aspect;
         requestLayout();
     }
 
     public Rect getScanBoxRect() {
         return scanBoxRect;
+    }
+
+
+    private void adjustOffset(){
+        int w=getMeasuredWidth();
+        int h=getMeasuredHeight();
+        WindowManager manager = (WindowManager)getContext().getSystemService(Context.WINDOW_SERVICE);
+        if (manager != null) {
+            Point size=new Point();
+            Display display = manager.getDefaultDisplay();
+            display.getSize(size);
+            w=Math.min(w,size.x-screen[0]);
+            h=Math.min(h,size.y-screen[1]);
+        }
+        int width=w*4/5;
+        int height = Math.min((int) (width * aspect), h*4/5);
+        int leftOffset = (w - width) / 2;
+        int topOffset =Math.max((h - height) / 2,0);
+        scanBoxRect = new Rect(leftOffset, topOffset, leftOffset + width, topOffset + height);
+        Log.d("set frame rect", scanBoxRect.toString());
+        TextView t=((View)getParent()).findViewById(R.id.status_view);
+        float top=scanBoxRect.bottom+  TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,  8, getContext().getResources().getDisplayMetrics());
+        t.setY(top);
     }
 
     @SuppressLint("DrawAllocation")
@@ -129,6 +143,12 @@ public class ViewfinderView extends View {
         Rect previewFrame = cameraManager.getFramingRectInPreview();
         if (frame == null || previewFrame == null) {
             return;
+        }
+        int last=screen[1];
+        getLocationOnScreen(screen);
+        if (last!=screen[1]){
+            adjustOffset();
+            cameraManager.refreshPreview();
         }
         drawRect(canvas,frame);
         drawPoint(canvas,frame,previewFrame);
