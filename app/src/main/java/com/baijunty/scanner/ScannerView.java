@@ -22,7 +22,7 @@ import com.google.zxing.client.android.ViewfinderView;
 import com.google.zxing.client.android.camera.CameraManager;
 
 public class ScannerView extends FrameLayout {
-    OnScanResultFound resultFoundListener=null;
+    private OnScanResultFound resultFoundListener=null;
     private ScannerManager manager;
     private Point theScreenResolution =new Point();
     public void setResultFoundListener(OnScanResultFound resultFoundListener) {
@@ -91,6 +91,8 @@ public class ScannerView extends FrameLayout {
                 TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.ScannerView);
                 float aspect=a.getFloat(R.styleable.ScannerView_aspect,1.0f);
                 setAspect(aspect);
+                int sound=a.getResourceId(R.styleable.ScannerView_sound_source,R.raw.beep);
+                getManager().setSoundRes(sound);
                 a.recycle();
             }
         }

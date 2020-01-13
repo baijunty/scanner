@@ -24,6 +24,9 @@ import android.media.MediaPlayer;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.util.Log;
+
+import androidx.annotation.RawRes;
+
 import com.baijunty.scanner.R;
 import com.baijunty.scanner.ScannerView;
 
@@ -43,11 +46,12 @@ final public class  BeepManager implements MediaPlayer.OnErrorListener, Closeabl
   private MediaPlayer mediaPlayer;
   private boolean playBeep;
   private boolean vibrate;
-
+  private @RawRes int soundSource;
   public BeepManager(ScannerView view) {
     this.context = view.getContext();
     scannerView=view;
     this.mediaPlayer = null;
+    soundSource=R.raw.beep;
     updatePrefs();
   }
 
@@ -87,7 +91,7 @@ final public class  BeepManager implements MediaPlayer.OnErrorListener, Closeabl
 
   private MediaPlayer buildMediaPlayer(Context activity) {
     MediaPlayer mediaPlayer = new MediaPlayer();
-    try (AssetFileDescriptor file = activity.getResources().openRawResourceFd(R.raw.beep)) {
+    try (AssetFileDescriptor file = activity.getResources().openRawResourceFd(soundSource)) {
       mediaPlayer.setDataSource(file.getFileDescriptor(), file.getStartOffset(), file.getLength());
       mediaPlayer.setOnErrorListener(this);
       mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -123,4 +127,7 @@ final public class  BeepManager implements MediaPlayer.OnErrorListener, Closeabl
     }
   }
 
+  public void setSoundSource(@RawRes int soundSource) {
+    this.soundSource = soundSource;
+  }
 }

@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import androidx.annotation.RawRes;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.MutableLiveData;
@@ -111,6 +112,11 @@ public class ScannerManager implements LifecycleObserver, SurfaceHolder.Callback
             hasSurface = true;
             initCamera(holder);
         }
+    }
+
+
+    public void setSoundRes(@RawRes int soundRes){
+        beepManager.setSoundSource(soundRes);
     }
 
     @Override

@@ -24,5 +24,6 @@
   <item type="id" name="return_scan_result"/>
   <declare-styleable name="ScannerView">
     <attr name="aspect" format="float"/>
+    <attr name="sound_source" format="reference"/>
   </declare-styleable>
 </resources>
