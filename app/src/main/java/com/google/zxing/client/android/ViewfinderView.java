@@ -107,7 +107,7 @@ public class ViewfinderView extends View {
     }
 
     public Rect getScanBoxRect() {
-        return new Rect(scanBoxRect.left+screen[0],scanBoxRect.top+screen[1],scanBoxRect.right+screen[0],scanBoxRect.bottom+screen[1]);
+        return scanBoxRect;
     }
 
 
