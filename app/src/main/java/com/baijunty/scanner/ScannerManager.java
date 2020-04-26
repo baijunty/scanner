@@ -5,7 +5,6 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import androidx.annotation.RawRes;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.MutableLiveData;
@@ -29,7 +28,7 @@ public class ScannerManager implements LifecycleObserver, SurfaceHolder.Callback
     ScannerManager(ScannerView scannerView) {
         this.scannerView = scannerView;
         ambientLightManager =new  AmbientLightManager(scannerView.getContext());
-        beepManager  =new  BeepManager(scannerView);
+        beepManager  =new  BeepManager(scannerView,scannerView.sound);
     }
 
     private Boolean hasSurface  = false;
@@ -116,11 +115,6 @@ public class ScannerManager implements LifecycleObserver, SurfaceHolder.Callback
             hasSurface = true;
             initCamera(holder);
         }
-    }
-
-
-    public void setSoundRes(@RawRes int soundRes){
-        beepManager.setSoundSource(soundRes);
     }
 
     @Override

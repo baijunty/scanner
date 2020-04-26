@@ -39,7 +39,7 @@ final public class  BeepManager implements MediaPlayer.OnErrorListener, Closeabl
 
   private static final String TAG = BeepManager.class.getSimpleName();
 
-  private static final float BEEP_VOLUME = 0.10f;
+  private static final float BEEP_VOLUME = 0.80f;
   private static final long VIBRATE_DURATION = 200L;
   private ScannerView scannerView;
   private final Context context;
@@ -47,11 +47,11 @@ final public class  BeepManager implements MediaPlayer.OnErrorListener, Closeabl
   private boolean playBeep;
   private boolean vibrate;
   private @RawRes int soundSource;
-  public BeepManager(ScannerView view) {
+  public BeepManager(ScannerView view,int soundSource) {
     this.context = view.getContext();
     scannerView=view;
+    this.soundSource=soundSource;
     this.mediaPlayer = null;
-    soundSource=R.raw.beep;
     updatePrefs();
   }
 
@@ -125,9 +125,5 @@ final public class  BeepManager implements MediaPlayer.OnErrorListener, Closeabl
       mediaPlayer.release();
       mediaPlayer = null;
     }
-  }
-
-  public void setSoundSource(@RawRes int soundSource) {
-    this.soundSource = soundSource;
   }
 }

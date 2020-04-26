@@ -122,8 +122,8 @@ public class ViewfinderView extends View {
             w=Math.min(w,size.x-screen[0]);
             h=Math.min(h,size.y-screen[1]);
         }
-        int width=w*4/5;
-        int height = Math.min((int) (width * aspect), h*4/5);
+        int width=Math.max(w*4/5,10);
+        int height = Math.max(Math.min((int) (width * aspect), h*4/5),10);
         int leftOffset = (w - width) / 2;
         int topOffset =Math.max((h - height) / 2,0);
         scanBoxRect = new Rect(leftOffset, topOffset, leftOffset + width, topOffset + height);
