@@ -29,7 +29,6 @@ import com.google.zxing.BinaryBitmap;
 import com.google.zxing.DecodeHintType;
 import com.google.zxing.MultiFormatReader;
 import com.google.zxing.PlanarYUVLuminanceSource;
-import com.google.zxing.ReaderException;
 import com.google.zxing.Result;
 import com.google.zxing.common.HybridBinarizer;
 
@@ -80,7 +79,7 @@ final class DecodeHandler extends Handler {
             BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(manager.getCameraManager().getConfigManager().isSoftColorInvert()?source.invert():source));
             try {
                 rawResult = multiFormatReader.decodeWithState(bitmap);
-            } catch (ReaderException re) {
+            } catch (Throwable re) {
                 // continue
             } finally {
                 multiFormatReader.reset();
