@@ -106,7 +106,10 @@ public class ScannerManager implements LifecycleObserver, SurfaceHolder.Callback
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-
+        if (!hasSurface) {
+            hasSurface = true;
+            initCamera(holder);
+        }
     }
 
     @Override
