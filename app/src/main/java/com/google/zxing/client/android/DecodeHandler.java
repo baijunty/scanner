@@ -21,7 +21,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 
 import com.baijunty.scanner.R;
 import com.baijunty.scanner.ScannerManager;
@@ -34,7 +33,6 @@ import com.google.zxing.common.HybridBinarizer;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 final class DecodeHandler extends Handler {
 
@@ -72,7 +70,6 @@ final class DecodeHandler extends Handler {
      * @param height The height of the preview frame.
      */
     private void decode(byte[] data, int width, int height) {
-        long start = System.nanoTime();
         Result rawResult = null;
         PlanarYUVLuminanceSource source = manager.getCameraManager().buildLuminanceSource(data, width, height);
         if (source != null) {
@@ -88,9 +85,6 @@ final class DecodeHandler extends Handler {
 
         Handler handler = manager.getHandler();
         if (rawResult != null) {
-            // Don't log the barcode contents for security.
-            long end = System.nanoTime();
-            Log.d(TAG, "Found barcode in " + TimeUnit.NANOSECONDS.toMillis(end - start) + " ms");
             Message message = Message.obtain(handler, R.id.decode_succeeded, rawResult);
             Bundle bundle = new Bundle();
             bundleThumbnail(source, bundle);

@@ -23,7 +23,12 @@ import com.google.zxing.ResultPointCallback;
 import com.google.zxing.common.BitMatrix;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>This class attempts to find finder patterns in a QR Code. Finder patterns are the square
@@ -90,7 +95,7 @@ public class FinderPatternFinder {
     int[] stateCount = new int[5];
     for (int i = iSkip - 1; i < maxI && !done; i += iSkip) {
       // Get a row of black/white values
-      clearCounts(stateCount);
+      doClearCounts(stateCount);
       int currentState = 0;
       for (int j = 0; j < maxJ; j++) {
         if (image.get(j, i)) {
@@ -126,15 +131,15 @@ public class FinderPatternFinder {
                     }
                   }
                 } else {
-                  shiftCounts2(stateCount);
+                  doShiftCounts2(stateCount);
                   currentState = 3;
                   continue;
                 }
                 // Clear state to start looking again
                 currentState = 0;
-                clearCounts(stateCount);
+                doClearCounts(stateCount);
               } else { // No, shift counts back by two
-                shiftCounts2(stateCount);
+                doShiftCounts2(stateCount);
                 currentState = 3;
               }
             } else {
@@ -192,11 +197,11 @@ public class FinderPatternFinder {
     float maxVariance = moduleSize / 2.0f;
     // Allow less than 50% variance from 1-1-3-1-1 proportions
     return
-        Math.abs(moduleSize - stateCount[0]) < maxVariance &&
-        Math.abs(moduleSize - stateCount[1]) < maxVariance &&
-        Math.abs(3.0f * moduleSize - stateCount[2]) < 3 * maxVariance &&
-        Math.abs(moduleSize - stateCount[3]) < maxVariance &&
-        Math.abs(moduleSize - stateCount[4]) < maxVariance;
+            Math.abs(moduleSize - stateCount[0]) < maxVariance &&
+                    Math.abs(moduleSize - stateCount[1]) < maxVariance &&
+                    Math.abs(3.0f * moduleSize - stateCount[2]) < 3 * maxVariance &&
+                    Math.abs(moduleSize - stateCount[3]) < maxVariance &&
+                    Math.abs(moduleSize - stateCount[4]) < maxVariance;
   }
 
   /**
@@ -228,15 +233,25 @@ public class FinderPatternFinder {
   }
 
   private int[] getCrossCheckStateCount() {
-    clearCounts(crossCheckStateCount);
+    doClearCounts(crossCheckStateCount);
     return crossCheckStateCount;
   }
 
+  @Deprecated
   protected final void clearCounts(int[] counts) {
+    doClearCounts(counts);
+  }
+
+  @Deprecated
+  protected final void shiftCounts2(int[] stateCount) {
+    doShiftCounts2(stateCount);
+  }
+
+  protected static void doClearCounts(int[] counts) {
     Arrays.fill(counts, 0);
   }
 
-  protected final void shiftCounts2(int[] stateCount) {
+  protected static void doShiftCounts2(int[] stateCount) {
     stateCount[0] = stateCount[2];
     stateCount[1] = stateCount[3];
     stateCount[2] = stateCount[4];
@@ -325,7 +340,7 @@ public class FinderPatternFinder {
    * @return vertical center of finder pattern, or {@link Float#NaN} if not found
    */
   private float crossCheckVertical(int startI, int centerJ, int maxCount,
-      int originalStateCountTotal) {
+                                   int originalStateCountTotal) {
     BitMatrix image = this.image;
 
     int maxI = image.getHeight();
@@ -383,7 +398,7 @@ public class FinderPatternFinder {
     // If we found a finder-pattern-like section, but its size is more than 40% different than
     // the original, assume it's a false positive
     int stateCountTotal = stateCount[0] + stateCount[1] + stateCount[2] + stateCount[3] +
-        stateCount[4];
+            stateCount[4];
     if (5 * Math.abs(stateCountTotal - originalStateCountTotal) >= 2 * originalStateCountTotal) {
       return Float.NaN;
     }
@@ -397,7 +412,7 @@ public class FinderPatternFinder {
    * check a vertical cross check and locate the real center of the alignment pattern.</p>
    */
   private float crossCheckHorizontal(int startJ, int centerI, int maxCount,
-      int originalStateCountTotal) {
+                                     int originalStateCountTotal) {
     BitMatrix image = this.image;
 
     int maxJ = image.getWidth();
@@ -452,7 +467,7 @@ public class FinderPatternFinder {
     // If we found a finder-pattern-like section, but its size is significantly different than
     // the original, assume it's a false positive
     int stateCountTotal = stateCount[0] + stateCount[1] + stateCount[2] + stateCount[3] +
-        stateCount[4];
+            stateCount[4];
     if (5 * Math.abs(stateCountTotal - originalStateCountTotal) >= originalStateCountTotal) {
       return Float.NaN;
     }
@@ -493,7 +508,7 @@ public class FinderPatternFinder {
    */
   protected final boolean handlePossibleCenter(int[] stateCount, int i, int j) {
     int stateCountTotal = stateCount[0] + stateCount[1] + stateCount[2] + stateCount[3] +
-        stateCount[4];
+            stateCount[4];
     float centerJ = centerFromEnd(stateCount, j);
     float centerI = crossCheckVertical(i, (int) centerJ, stateCount[2], stateCountTotal);
     if (!Float.isNaN(centerI)) {
@@ -548,7 +563,7 @@ public class FinderPatternFinder {
           // This is the case where you find top left last.
           hasSkipped = true;
           return (int) (Math.abs(firstConfirmedCenter.getX() - center.getX()) -
-              Math.abs(firstConfirmedCenter.getY() - center.getY())) / 2;
+                  Math.abs(firstConfirmedCenter.getY() - center.getY())) / 2;
         }
       }
     }
@@ -610,7 +625,6 @@ public class FinderPatternFinder {
     Collections.sort(possibleCenters,moduleComparator);
 
     double distortion = Double.MAX_VALUE;
-    double[] squares = new double[3];
     FinderPattern[] bestPatterns = new FinderPattern[3];
 
     for (int i = 0; i < possibleCenters.size() - 2; i++) {
@@ -629,17 +643,49 @@ public class FinderPatternFinder {
             continue;
           }
 
-          squares[0] = squares0;
-          squares[1] = squaredDistance(fpj, fpk);
-          squares[2] = squaredDistance(fpi, fpk);
-          Arrays.sort(squares);
+          double a = squares0;
+          double b = squaredDistance(fpj, fpk);
+          double c = squaredDistance(fpi, fpk);
+
+          // sorts ascending - inlined
+          if (a < b) {
+            if (b > c) {
+              if (a < c) {
+                double temp = b;
+                b = c;
+                c = temp;
+              } else {
+                double temp = a;
+                a = c;
+                c = b;
+                b = temp;
+              }
+            }
+          } else {
+            if (b < c) {
+              if (a < c) {
+                double temp = a;
+                a = b;
+                b = temp;
+              } else {
+                double temp = a;
+                a = b;
+                b = c;
+                c = temp;
+              }
+            } else {
+              double temp = a;
+              a = c;
+              c = temp;
+            }
+          }
 
           // a^2 + b^2 = c^2 (Pythagorean theorem), and a = b (isosceles triangle).
           // Since any right triangle satisfies the formula c^2 - b^2 - a^2 = 0,
           // we need to check both two equal sides separately.
           // The value of |c^2 - 2 * b^2| + |c^2 - 2 * a^2| increases as dissimilarity
           // from isosceles right triangle.
-          double d = Math.abs(squares[2] - 2 * squares[1]) + Math.abs(squares[2] - 2 * squares[0]);
+          double d = Math.abs(c - 2 * b) + Math.abs(c - 2 * a);
           if (d < distortion) {
             distortion = d;
             bestPatterns[0] = fpi;
@@ -651,7 +697,7 @@ public class FinderPatternFinder {
     }
 
     if (distortion == Double.MAX_VALUE) {
-        throw NotFoundException.getNotFoundInstance();
+      throw NotFoundException.getNotFoundInstance();
     }
 
     return bestPatterns;

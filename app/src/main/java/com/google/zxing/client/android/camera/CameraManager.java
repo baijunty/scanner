@@ -38,7 +38,7 @@ import java.io.IOException;
  *
  * @author dswitkin@google.com (Daniel Switkin)
  */
-@SuppressWarnings("deprecation") // camera APIs
+// camera APIs
 public final class CameraManager {
 
     private static final String TAG = CameraManager.class.getSimpleName();
@@ -114,9 +114,6 @@ public final class CameraManager {
             configManager.setDesiredCameraParameters(theCamera, false);
         } catch (RuntimeException re) {
             // Driver failed
-            Log.w(TAG, "Camera rejected parameters. Setting only minimal safe-mode parameters");
-            Log.i(TAG, "Resetting to saved camera params: " + parametersFlattened);
-            // Reset:
             if (parametersFlattened != null) {
                 parameters = cameraObject.getParameters();
                 parameters.unflatten(parametersFlattened);

@@ -20,7 +20,6 @@ import android.graphics.Point;
 import android.hardware.Camera;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 
 @SuppressWarnings("deprecation") // camera APIs
 final class PreviewCallback implements Camera.PreviewCallback {
@@ -49,8 +48,6 @@ final class PreviewCallback implements Camera.PreviewCallback {
           cameraResolution.y, data);
       message.sendToTarget();
       previewHandler = null;
-    } else {
-      Log.d(TAG, "Got preview callback, but no handler or resolution available");
     }
   }
 
