@@ -41,12 +41,13 @@ final public class  BeepManager implements MediaPlayer.OnErrorListener, Closeabl
 
   private static final float BEEP_VOLUME = 0.80f;
   private static final long VIBRATE_DURATION = 200L;
-  private ScannerView scannerView;
+  private final ScannerView scannerView;
   private final Context context;
   private MediaPlayer mediaPlayer;
   private boolean playBeep;
   private boolean vibrate;
-  private @RawRes int soundSource;
+  private @RawRes
+  final int soundSource;
   public BeepManager(ScannerView view,int soundSource) {
     this.context = view.getContext();
     scannerView=view;

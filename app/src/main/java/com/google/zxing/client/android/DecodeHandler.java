@@ -42,7 +42,8 @@ final class DecodeHandler extends Handler {
     private final MultiFormatReader multiFormatReader;
     private boolean running = true;
 
-    DecodeHandler(ScannerManager manager, Map<DecodeHintType, Object> hints) {
+    DecodeHandler(ScannerManager manager, Map<DecodeHintType, Object> hints,Looper looper) {
+        super(looper);
         multiFormatReader = new MultiFormatReader();
         multiFormatReader.setHints(hints);
         this.manager = manager;
@@ -84,16 +85,16 @@ final class DecodeHandler extends Handler {
         }
 
         Handler handler = manager.getHandler();
+        Message message;
         if (rawResult != null) {
-            Message message = Message.obtain(handler, R.id.decode_succeeded, rawResult);
+            message = Message.obtain(handler, R.id.decode_succeeded, rawResult);
             Bundle bundle = new Bundle();
             bundleThumbnail(source, bundle);
             message.setData(bundle);
-            message.sendToTarget();
         } else {
-            Message message = Message.obtain(handler, R.id.decode_failed);
-            message.sendToTarget();
+            message = Message.obtain(handler, R.id.decode_failed);
         }
+        message.sendToTarget();
     }
 
     private static void bundleThumbnail(PlanarYUVLuminanceSource source, Bundle bundle) {

@@ -90,9 +90,9 @@ public class ViewfinderView extends View {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int w = getMeasuredWidth() * 4 / 5;
         int h = getMeasuredHeight() * 4 / 5;
-        if (w > 0 && h > 0 && cameraManager != null) {
+        if (w > 0 && h > 0) {
             adjustOffset();
-            cameraManager.setViewfinderView(this);
+//            cameraManager.setViewfinderView(this);
         }
     }
 
@@ -137,11 +137,13 @@ public class ViewfinderView extends View {
     @Override
     public void onDraw(Canvas canvas) {
         if (cameraManager == null) {
+            postInvalidateDelayed(ANIMATION_DELAY);
             return; // not ready yet, early draw before done configuring
         }
         Rect frame = scanBoxRect;
         Rect previewFrame = cameraManager.getFramingRectInPreview();
         if (frame == null || previewFrame == null) {
+            postInvalidateDelayed(ANIMATION_DELAY);
             return;
         }
         int last=screen[1];

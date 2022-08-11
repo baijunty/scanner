@@ -1,6 +1,8 @@
 package com.baijunty.scanner;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -21,7 +23,7 @@ import com.google.zxing.client.android.camera.CameraManager;
 import java.io.IOException;
 
 public class ScannerManager implements LifecycleObserver, SurfaceHolder.Callback{
-    private String TAG = ScannerView.class.getSimpleName();
+    private final String TAG = ScannerView.class.getSimpleName();
     private final ScannerView scannerView;
     private final AmbientLightManager ambientLightManager;
     private final BeepManager beepManager ;
@@ -29,10 +31,13 @@ public class ScannerManager implements LifecycleObserver, SurfaceHolder.Callback
         this.scannerView = scannerView;
         ambientLightManager =new  AmbientLightManager(scannerView.getContext());
         beepManager  =new  BeepManager(scannerView,scannerView.sound);
+        SurfaceView surfaceView = scannerView.findViewById(R.id.preview_view);
+        SurfaceHolder surfaceHolder = surfaceView.getHolder();
+        surfaceHolder.addCallback(this);
     }
 
-    private Boolean hasSurface  = false;
-    private MutableLiveData<Result> result =new MutableLiveData<>();
+    private boolean hasSurface  = false;
+    private final MutableLiveData<Result> result =new MutableLiveData<>();
 
     public Context getContext(){
         return scannerView.getContext();
@@ -87,6 +92,10 @@ public class ScannerManager implements LifecycleObserver, SurfaceHolder.Callback
     private void initCamera(SurfaceHolder surfaceHolder) {
         if (getCameraManager().isOpen()) {
             Log.w(TAG, "initCamera() while already open -- late SurfaceView callback?");
+            return;
+        }
+        if (getContext().checkCallingOrSelfPermission(Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED ){
+            Log.w(TAG, "no camera permission");
             return;
         }
         try {

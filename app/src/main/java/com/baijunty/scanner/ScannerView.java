@@ -25,24 +25,18 @@ public class ScannerView extends FrameLayout {
     private OnScanResultFound resultFoundListener=null;
     private ScannerManager manager;
     protected int sound;
-    private Point theScreenResolution =new Point();
+    private final Point theScreenResolution =new Point();
     public void setResultFoundListener(OnScanResultFound resultFoundListener) {
         this.resultFoundListener = resultFoundListener;
     }
 
     public ScannerManager getManager(){
-        if (manager==null){
-            manager= new ScannerManager(this);
-        }
         return manager;
     }
 
     CameraManager cameraManager;
 
     public CameraManager getCameraManager() {
-        if (cameraManager==null){
-            cameraManager=new CameraManager(getContext().getApplicationContext());
-        }
         return cameraManager;
     }
 
@@ -74,15 +68,13 @@ public class ScannerView extends FrameLayout {
 
     public void bindLifecycle(Lifecycle lifecycle){
         PreferenceManager.setDefaultValues(getContext(), R.xml.preferences, false);
-        ViewfinderView viewfinderView=findViewById(R.id.viewfinder_view);
-        viewfinderView.setCameraManager(getCameraManager());
         lifecycle.addObserver(getManager());
         getManager().addObserve(result -> {
             if (resultFoundListener!=null&&resultFoundListener.onFounded(result)){
                 restartPreview();
             }
         });
-        postInvalidateDelayed(200);
+        requestLayout();
     }
 
     private void layoutScannerView(AttributeSet attrs) {
@@ -95,6 +87,11 @@ public class ScannerView extends FrameLayout {
                 sound=a.getResourceId(R.styleable.ScannerView_sound_source,R.raw.beep);
                 a.recycle();
             }
+            manager= new ScannerManager(this);
+            cameraManager=new CameraManager(getContext().getApplicationContext());
+            ViewfinderView viewfinderView=findViewById(R.id.viewfinder_view);
+            viewfinderView.setCameraManager(getCameraManager());
+            getCameraManager().setViewfinderView(viewfinderView);
         }
     }
 
