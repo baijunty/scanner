@@ -26,7 +26,7 @@ import android.view.Display;
 import android.view.Surface;
 import android.view.WindowManager;
 
-import com.google.zxing.client.android.PreferencesFragment;
+import com.google.zxing.client.android.PreferencesKeys;
 import com.google.zxing.client.android.camera.open.CameraFacing;
 import com.google.zxing.client.android.camera.open.OpenCamera;
 
@@ -34,7 +34,7 @@ import com.google.zxing.client.android.camera.open.OpenCamera;
  * A class which deals with reading, parsing, and setting the camera parameters which are used to
  * configure the camera hardware.
  */
-@SuppressWarnings("deprecation") // camera APIs
+// camera APIs
 public final class CameraConfigurationManager {
 
     private static final String TAG = "CameraConfiguration";
@@ -161,20 +161,20 @@ public final class CameraConfigurationManager {
 
         CameraConfigurationUtils.setFocus(
                 parameters,
-                prefs.getBoolean(PreferencesFragment.KEY_AUTO_FOCUS, true),
-                prefs.getBoolean(PreferencesFragment.KEY_DISABLE_CONTINUOUS_FOCUS, false),
+                prefs.getBoolean(PreferencesKeys.KEY_AUTO_FOCUS, true),
+                prefs.getBoolean(PreferencesKeys.KEY_DISABLE_CONTINUOUS_FOCUS, false),
                 safeMode);
 
         if (!safeMode) {
-            if (prefs.getBoolean(PreferencesFragment.KEY_INVERT_SCAN, false)) {
+            if (prefs.getBoolean(PreferencesKeys.KEY_INVERT_SCAN, false)) {
                 softColorInvert = CameraConfigurationUtils.setInvertColor(parameters);
             }
 
-            if (!prefs.getBoolean(PreferencesFragment.KEY_DISABLE_BARCODE_SCENE_MODE, true)) {
+            if (!prefs.getBoolean(PreferencesKeys.KEY_DISABLE_BARCODE_SCENE_MODE, true)) {
                 CameraConfigurationUtils.setBarcodeSceneMode(parameters);
             }
 
-            if (!prefs.getBoolean(PreferencesFragment.KEY_DISABLE_METERING, true)) {
+            if (!prefs.getBoolean(PreferencesKeys.KEY_DISABLE_METERING, true)) {
                 CameraConfigurationUtils.setVideoStabilization(parameters);
                 CameraConfigurationUtils.setFocusArea(parameters);
                 CameraConfigurationUtils.setMetering(parameters);
@@ -253,7 +253,7 @@ public final class CameraConfigurationManager {
     private void doSetTorch(Camera.Parameters parameters, boolean newSetting, boolean safeMode) {
         CameraConfigurationUtils.setTorch(parameters, newSetting);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        if (!safeMode && !prefs.getBoolean(PreferencesFragment.KEY_DISABLE_EXPOSURE, true)) {
+        if (!safeMode && !prefs.getBoolean(PreferencesKeys.KEY_DISABLE_EXPOSURE, true)) {
             CameraConfigurationUtils.setBestExposure(parameters, newSetting);
         }
     }

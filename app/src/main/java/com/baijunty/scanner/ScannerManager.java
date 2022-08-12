@@ -7,11 +7,11 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleObserver;
+import androidx.annotation.NonNull;
+import androidx.lifecycle.DefaultLifecycleObserver;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.OnLifecycleEvent;
 
 import com.google.zxing.Result;
 import com.google.zxing.client.android.AmbientLightManager;
@@ -22,7 +22,7 @@ import com.google.zxing.client.android.camera.CameraManager;
 
 import java.io.IOException;
 
-public class ScannerManager implements LifecycleObserver, SurfaceHolder.Callback{
+public class ScannerManager implements DefaultLifecycleObserver, SurfaceHolder.Callback{
     private final String TAG = ScannerView.class.getSimpleName();
     private final ScannerView scannerView;
     private final AmbientLightManager ambientLightManager;
@@ -55,8 +55,8 @@ public class ScannerManager implements LifecycleObserver, SurfaceHolder.Callback
         return scannerView.findViewById(R.id.viewfinder_view);
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
-    public void onPause(){
+    @Override
+    public void onPause(@NonNull LifecycleOwner owner) {
         ambientLightManager.stop();
         if (handler!=null){
             handler.quitSynchronously();
@@ -70,13 +70,13 @@ public class ScannerManager implements LifecycleObserver, SurfaceHolder.Callback
         }
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    public void destroy(){
+    @Override
+    public void onDestroy(@NonNull LifecycleOwner owner) {
         beepManager.close();
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
-    public void onResume(){
+    @Override
+    public void onResume(@NonNull LifecycleOwner owner) {
         beepManager.updatePrefs();
         ambientLightManager.start(getCameraManager());
         SurfaceView surfaceView = scannerView.findViewById(R.id.preview_view);
@@ -87,7 +87,6 @@ public class ScannerManager implements LifecycleObserver, SurfaceHolder.Callback
             surfaceHolder.addCallback(this);
         }
     }
-
 
     private void initCamera(SurfaceHolder surfaceHolder) {
         if (getCameraManager().isOpen()) {

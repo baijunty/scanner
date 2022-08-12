@@ -17,6 +17,7 @@
 package com.google.zxing.client.android;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 
 import com.baijunty.scanner.R;
@@ -48,6 +49,7 @@ public final class CaptureActivityHandler extends Handler {
                                   Map<DecodeHintType, ?> baseHints,
                                   String characterSet,
                                   CameraManager cameraManager) {
+        super(Looper.getMainLooper());
         this.manager = manager;
         decodeThread = new DecodeThread(manager, decodeFormats, baseHints, characterSet,
                 new ViewfinderResultPointCallback(manager.getViewfinderView()));

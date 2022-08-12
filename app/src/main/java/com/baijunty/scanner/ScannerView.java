@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Point;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.view.Display;
 import android.view.View;
@@ -15,7 +16,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.lifecycle.Lifecycle;
-import androidx.preference.PreferenceManager;
 
 import com.google.zxing.client.android.CaptureActivityHandler;
 import com.google.zxing.client.android.ViewfinderView;
@@ -70,11 +70,10 @@ public class ScannerView extends FrameLayout {
         PreferenceManager.setDefaultValues(getContext(), R.xml.preferences, false);
         lifecycle.addObserver(getManager());
         getManager().addObserve(result -> {
-            if (resultFoundListener!=null&&resultFoundListener.onFounded(result)){
+            if (resultFoundListener!=null&&resultFoundListener.onFounded(new ScanResult(result))){
                 restartPreview();
             }
         });
-        requestLayout();
     }
 
     private void layoutScannerView(AttributeSet attrs) {

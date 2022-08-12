@@ -8,12 +8,17 @@ afterEvaluate {
             // Creates a Maven publication called "release".
             release(MavenPublication) {
                 // Applies the component for the release build variant.
-                from components.release
-
                 // You can then customize attributes of the publication as shown below.
                 groupId = 'com.github.baijunty'
-                artifactId = 'printer'
-                version = 'scanner'
+                artifactId = 'scanner'
+                version = '1.0.1'
+            }
+            debug(MavenPublication) {
+                // Applies the component for the release build variant.
+                // You can then customize attributes of the publication as shown below.
+                groupId = 'com.github.baijunty'
+                artifactId = 'scanner-debug'
+                version = '1.0.1'
             }
         }
     }
@@ -42,6 +47,8 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.preference:preference:1.2.0'
     implementation 'com.google.zxing:core:3.5.0'
+    implementation 'androidx.lifecycle:lifecycle-common:2.5.1'
+    implementation 'androidx.annotation:annotation:1.4.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata-core:2.5.1'
 }
