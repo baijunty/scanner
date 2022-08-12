@@ -14,14 +14,6 @@ afterEvaluate {
                 artifactId = 'scanner'
                 version = '1.0.1'
             }
-            debug(MavenPublication) {
-                // Applies the component for the release build variant.
-                from components.debug
-                // You can then customize attributes of the publication as shown below.
-                groupId = 'com.github.baijunty'
-                artifactId = 'scanner-debug'
-                version = '1.0.1'
-            }
         }
     }
 }
