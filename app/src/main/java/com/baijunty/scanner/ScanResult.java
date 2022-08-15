@@ -1,14 +1,13 @@
 package com.baijunty.scanner;
 
-import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 
 public final class ScanResult {
     private final String text;
-    private final BarcodeFormat format;
+    private final String format;
     private final long timestamp;
 
-    public ScanResult(String text, BarcodeFormat format, long timestamp) {
+    public ScanResult(String text, String format, long timestamp) {
         this.text = text;
         this.format = format;
         this.timestamp = timestamp;
@@ -16,7 +15,7 @@ public final class ScanResult {
 
     public ScanResult(Result result){
         this.text=result.getText();
-        this.format=result.getBarcodeFormat();
+        this.format=result.getBarcodeFormat().name();
         this.timestamp= result.getTimestamp();
     }
 
@@ -24,7 +23,7 @@ public final class ScanResult {
         return text;
     }
 
-    public BarcodeFormat getFormat() {
+    public String getFormat() {
         return format;
     }
 
