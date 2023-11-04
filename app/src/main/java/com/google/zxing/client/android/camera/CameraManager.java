@@ -138,8 +138,14 @@ public final class CameraManager {
      * Closes the camera driver if still in use.
      */
     public synchronized void closeDriver() {
-        if (camera != null) {
-            camera.getCamera().release();
+        try {
+            if (camera != null) {
+                camera.getCamera().release();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        finally {
             camera = null;
             // Make sure to clear these each time we close the camera, so that any scanning rect
             // requested by intent is forgotten.

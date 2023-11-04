@@ -1,7 +1,7 @@
 apply plugin:'com.android.library'
 apply plugin: 'maven-publish'
 group = 'com.github.baijunty'
-version='1.0.1'
+version='1.0.2'
 afterEvaluate {
     publishing {
         publications {
@@ -12,17 +12,16 @@ afterEvaluate {
                 from components.release
                 groupId = 'com.github.baijunty'
                 artifactId = 'scanner'
-                version = '1.0.1'
+                version = '1.0.2'
             }
         }
     }
 }
 android {
-    compileSdkVersion 31
-    buildToolsVersion "31.0.0"
+    compileSdkVersion 34
     defaultConfig {
         minSdkVersion 19
-        targetSdkVersion 31
+        targetSdkVersion 34
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -35,13 +34,18 @@ android {
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
     }
+    publishing {
+        // Publishes "fullRelease" build variant with "fullRelease" component created by
+        // Android Gradle plugin
+        singleVariant("release")
+    }
     namespace 'com.baijunty.scanner'
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.google.zxing:core:3.5.1'
-    implementation 'androidx.lifecycle:lifecycle-common:2.5.1'
-    implementation 'androidx.annotation:annotation:1.5.0'
-    implementation 'androidx.lifecycle:lifecycle-livedata-core:2.5.1'
+    implementation 'com.google.zxing:core:3.5.2'
+    implementation 'androidx.lifecycle:lifecycle-common:2.6.2'
+    implementation 'androidx.annotation:annotation:1.7.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata-core:2.6.2'
 }
